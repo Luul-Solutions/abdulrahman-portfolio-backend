@@ -1,5 +1,6 @@
 import { DataTypes, Model, CreationOptional } from "sequelize";
-import { sequelize } from "../config/database";
+import sequelize from "../config/database"; // ✅ correct
+
 
 export class Profile extends Model {
   declare id: CreationOptional<number>;

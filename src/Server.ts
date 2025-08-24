@@ -1,12 +1,24 @@
 import app from "./App";
-import { initDB } from "./config/database";
+import { sequelize } from "./config/database";
 
-const PORT = Number(process.env.PORT || 4000);
+const PORT = process.env.PORT || 5000;
 
-(async () => {
-  await initDB();
-  app.listen(PORT, () =>
-    console.log(`🚀 Server running at http://localhost:${PORT}`)
-  );
-})();
+async function start() {
+  try {
+    await sequelize.sync();
+    console.log("✅ Database connected");
 
+     app.listen(PORT, () => {
+       console.log(`🚀 Server running at http://localhost:${PORT}`);
+       console.log(
+         `📘 Swagger docs available at http://localhost:${PORT}/api-docs`
+       );
+     });
+
+   
+  } catch (error) {
+    console.error("❌ Unable to start server:", error);
+  }
+}
+
+start();

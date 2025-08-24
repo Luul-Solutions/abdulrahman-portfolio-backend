@@ -1,3 +1,4 @@
+// src/config/database.ts
 import { Sequelize } from "sequelize";
 import * as dotenv from "dotenv";
 
@@ -9,7 +10,7 @@ const DB_NAME = process.env.DB_NAME || "portfolio_db";
 const DB_USER = process.env.DB_USER || "root";
 const DB_PASS = process.env.DB_PASS || "root1234";
 
-export const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
   host: DB_HOST,
   port: DB_PORT,
   dialect: "mysql",
@@ -19,12 +20,12 @@ export const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
 export async function initDB() {
   try {
     await sequelize.authenticate();
-    if (process.env.SYNC_DB === "true") {
-      await sequelize.sync({ alter: true });
-    }
     console.log("✅ Database connected");
   } catch (err) {
     console.error("❌ Unable to connect to the database:", err);
     process.exit(1);
   }
 }
+
+export { sequelize };
+export default sequelize;
