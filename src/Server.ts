@@ -1,24 +1,16 @@
-import app from "./App";
-import { sequelize } from "./config/database";
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import profileRoutes from "./routes/ProfileRoutes";
 
-const PORT = process.env.PORT || 5000;
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
 
-async function start() {
-  try {
-    await sequelize.sync();
-    console.log("✅ Database connected");
+// Register routes
+app.use("/profiles", profileRoutes);
 
-     app.listen(PORT, () => {
-       console.log(`🚀 Server running at http://localhost:${PORT}`);
-       console.log(
-         `📘 Swagger docs available at http://localhost:${PORT}/api-docs`
-       );
-     });
-
-   
-  } catch (error) {
-    console.error("❌ Unable to start server:", error);
-  }
-}
-
-start();
+const PORT = 5001;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

@@ -1,35 +1,38 @@
 // src/app.ts
 import express from "express";
-import dotenv from "dotenv";
-import { sequelize } from "./config/database";
 import swaggerUi from "swagger-ui-express";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerOptions from "./swaggerDef"; // <- your centralized Swagger file
-import profileRoutes from "./routes/ProfileRoutes"; // make sure this exists
-
-dotenv.config();
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerOptions from "./swaggerDef";
+import profileRoutes from "./routes/ProfileRoutes";
 
 const app = express();
 app.use(express.json());
 
-// Use routes
-app.use("/", profileRoutes);
+// API routes
+app.use("/profiles", profileRoutes);
 
-// Generate Swagger spec from your centralized file
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
+// Swagger setup
+const specs = swaggerJsdoc(swaggerOptions);
 
-// Mount Swagger UI
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Serve Swagger JSON at /api-docs.json
+app.get("/api-docs.json", (_req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(specs);
+});
 
-// Start DB and server
-const PORT = process.env.PORT || 5001;
-
-sequelize
-  .sync()
-  .then(() => {
-    console.log("✅ Database connected");
-   
+// Swagger UI
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    swaggerUrl: "/api-docs.json", // point Swagger UI to JSON spec
   })
-  .catch((err: Error) => console.error("❌ Unable to connect to DB:", err));
+);
 
-export default app;
+// Optional redirect from trailing slash
+app.get("/api-docs/", (_req, res) => res.redirect("/api-docs"));
+
+app.get("/", (_req, res) => res.send("API is running"));
+
+const PORT = 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

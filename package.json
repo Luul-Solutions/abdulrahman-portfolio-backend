@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node src/Server.ts",
+    "start": "tsc && node dist/Server.js",
     "dev": "ts-node-dev --respawn src/Server.ts"
   },
   "dependencies": {
@@ -27,3 +27,5 @@
     "typescript": "^5.9.2"
   }
 }
+
+

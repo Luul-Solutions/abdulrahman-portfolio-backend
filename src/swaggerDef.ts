@@ -9,12 +9,7 @@ const swaggerOptions: Options = {
       version: "1.0.0",
       description: "API for managing user profiles",
     },
-    servers: [
-      {
-        url: "http://localhost:5050",
-        description: "Local server",
-      },
-    ],
+    servers: [{ url: "http://localhost:5001", description: "Local server" }],
     components: {
       schemas: {
         Profile: {
@@ -49,12 +44,12 @@ const swaggerOptions: Options = {
           required: ["name", "email"],
           properties: {
             name: { type: "string" },
+            email: { type: "string" },
             bio: { type: "string" },
             location: { type: "string" },
             nationality: { type: "string" },
             availability: { type: "string" },
             dateOfBrith: { type: "string", format: "date" },
-            email: { type: "string" },
             phone: { type: "string" },
             address: { type: "string" },
             github: { type: "string" },
@@ -73,9 +68,7 @@ const swaggerOptions: Options = {
         },
         ErrorResponse: {
           type: "object",
-          properties: {
-            message: { type: "string" },
-          },
+          properties: { message: { type: "string" } },
         },
       },
     },
@@ -94,7 +87,7 @@ const swaggerOptions: Options = {
           },
           responses: {
             "201": {
-              description: "Profile created successfully",
+              description: "Profile created",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Profile" },
@@ -103,6 +96,31 @@ const swaggerOptions: Options = {
             },
             "500": {
               description: "Failed to create profile",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/ErrorResponse" },
+                },
+              },
+            },
+          },
+        },
+        get: {
+          summary: "Get all profiles",
+          tags: ["Profiles"],
+          responses: {
+            "200": {
+              description: "List of profiles",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "array",
+                    items: { $ref: "#/components/schemas/Profile" },
+                  },
+                },
+              },
+            },
+            "500": {
+              description: "Failed to fetch profiles",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/ErrorResponse" },
@@ -126,7 +144,7 @@ const swaggerOptions: Options = {
           ],
           responses: {
             "200": {
-              description: "Profile retrieved successfully",
+              description: "Profile found",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Profile" },
@@ -172,7 +190,7 @@ const swaggerOptions: Options = {
           },
           responses: {
             "200": {
-              description: "Profile updated successfully",
+              description: "Profile updated",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Profile" },
@@ -210,7 +228,7 @@ const swaggerOptions: Options = {
           ],
           responses: {
             "200": {
-              description: "Profile deleted successfully",
+              description: "Profile deleted",
               content: {
                 "application/json": {
                   schema: {
@@ -241,7 +259,7 @@ const swaggerOptions: Options = {
       },
     },
   },
-  apis: [], // can include JSDoc-style annotations if needed
+  apis: ["./src/routes/*.ts"],
 };
 
 export default swaggerOptions;
